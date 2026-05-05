@@ -44,7 +44,7 @@ python3 -m http.server 8080
 │   ├── adr-store.js        # Data layer: CRUD, localStorage, bulk reset [FR-001..FR-014]
 │   ├── adr-renderer.js     # UI rendering: list view, detail view, forms [FR-004..FR-007]
 │   └── guardrail.js        # Guardrail dialog and logging [FR-009, FR-010, FR-015, FR-016]
-├── data.json               # Seed data / export target [FR-003, FR-014]
+├── data.json               # Seed data with 4 ADRs in mixed statuses [FR-003, FR-014]
 ├── guardrail-log.md        # Append-only guardrail invocation log [FR-015, FR-016]
 ├── tests/
 │   ├── SpecRunner.html     # Jasmine test runner (CDN-loaded)

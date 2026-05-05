@@ -50,6 +50,17 @@ The complete set of ADRs, persisted as a JSON array.
 
 **Initialization**: If no data exists in localStorage on first load, the collection is initialized as `{ "adrs": [] }` — FR-014. If served via HTTP, the app attempts to `fetch('data.json')` to seed data.
 
+**Seed Data**: `data.json` ships pre-populated with four ADRs in mixed statuses to support the US-05 bulk reset guardrail demonstration:
+
+| Seed ID | Title | Status | createdAt |
+|---------|-------|--------|-----------|
+| adr-seed-001 | Use localStorage for client-side persistence | Accepted | 2026-01-15T09:00:00.000Z |
+| adr-seed-002 | Adopt vanilla CSS over utility frameworks | Accepted | 2026-02-20T14:30:00.000Z |
+| adr-seed-003 | Evaluate IndexedDB for complex queries | Proposed | 2026-03-10T11:15:00.000Z |
+| adr-seed-004 | Replace manual DOM updates with virtual DOM library | Deprecated | 2026-04-05T16:45:00.000Z |
+
+This ensures the bulk reset operation reports "4 records will be affected" and demonstrates status changes across all three status types.
+
 ### Guardrail Log Entry
 
 Each entry in `guardrail-log.md` records a guardrail invocation.
