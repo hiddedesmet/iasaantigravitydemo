@@ -7,7 +7,8 @@ request explicit human consent before proceeding.
 
 ## G-01: Bulk data modification
 **Trigger:** Any operation that modifies more than one record in 
-data.json in a single action.
+data.json in a single action. Specifically triggered by the bulk 
+reset operation in US-04 (FR-008, FR-009, FR-010).
 **Reason:** Bulk writes are difficult to reverse.
 **Halt procedure:**
 1. Stop all implementation
