@@ -5,6 +5,13 @@
 **Status**: Draft  
 **Input**: User description: "Build a simple Architecture Decision Record tracker. Users can create a new ADR with a title, status (Proposed, Accepted, Deprecated), and a short description of the decision and its rationale. All ADRs are listed on the main page. Users can click an ADR to view its details and change its status. Also include a bulk reset feature that resets all ADRs back to Proposed status in one operation. This bulk reset must trigger a guardrail — the agent must stop and ask for explicit user consent before writing to data.json. No login required."
 
+## Clarifications
+
+### Session 2026-05-05
+
+- Q: How should the bulk reset guardrail behave in detail? → A: The agent must state which guardrail fired (Constitution Principle IV), describe exactly how many records will be affected, wait for an explicit yes or no before proceeding, and log the outcome to `guardrail-log.md` regardless of whether consent was given or refused.
+- Q: Are ADR status transitions restricted? → A: Unrestricted — any status can transition to any other status (reasonable default; simplicity goal).
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Create a New ADR (Priority: P1)
@@ -66,11 +73,10 @@ A user wants to reset all ADRs back to "Proposed" status in a single operation. 
 
 **Acceptance Scenarios**:
 
-1. **Given** multiple ADRs exist with mixed statuses, **When** the user clicks "Reset All to Proposed", **Then** a confirmation dialog appears stating how many ADRs will be affected.
-2. **Given** the confirmation dialog is displayed, **When** the user confirms, **Then** the agent halts and requests explicit human consent before writing to `data.json` (guardrail).
-3. **Given** explicit human consent is provided, **When** the write proceeds, **Then** all ADR statuses in `data.json` are set to "Proposed" and the updated list is displayed.
-4. **Given** the confirmation dialog is displayed, **When** the user cancels, **Then** no changes are made to `data.json` and the list remains unchanged.
-5. **Given** no ADRs exist, **When** the user clicks "Reset All to Proposed", **Then** a message informs the user there are no ADRs to reset.
+1. **Given** multiple ADRs exist with mixed statuses, **When** the user clicks "Reset All to Proposed", **Then** the agent halts and states: which guardrail fired (Constitution Principle IV — Hard Guardrail Stops), and exactly how many ADR records will be affected.
+2. **Given** the guardrail has fired, **When** the user provides an explicit "yes", **Then** all ADR statuses in `data.json` are set to "Proposed", the updated list is displayed, and the approved outcome is logged to `guardrail-log.md`.
+3. **Given** the guardrail has fired, **When** the user provides an explicit "no", **Then** no changes are made to `data.json`, the list remains unchanged, and the refused outcome is logged to `guardrail-log.md`.
+4. **Given** no ADRs exist, **When** the user clicks "Reset All to Proposed", **Then** a message informs the user there are no ADRs to reset (no guardrail triggered).
 
 ---
 
@@ -93,8 +99,10 @@ A user wants to reset all ADRs back to "Proposed" status in a single operation. 
 - **FR-006**: System MUST allow users to click an ADR in the list to view its full details (title, status, description).
 - **FR-007**: System MUST allow users to change the status of an ADR from its detail view to any of the three allowed values (Proposed, Accepted, Deprecated).
 - **FR-008**: System MUST provide a "Reset All to Proposed" bulk operation that sets every ADR's status to "Proposed" in a single action.
-- **FR-009**: System MUST display a confirmation dialog before executing the bulk reset, stating the number of ADRs affected.
-- **FR-010**: The bulk reset operation MUST trigger a hard guardrail — the agent MUST halt and request explicit human consent before writing to `data.json` (per Constitution Principle IV).
+- **FR-009**: When bulk reset is triggered, the agent MUST state which guardrail fired (Constitution Principle IV — Hard Guardrail Stops) and the exact number of ADR records that will be affected.
+- **FR-010**: The agent MUST wait for an explicit "yes" or "no" from the user before proceeding with the bulk write to `data.json` — no implicit confirmation is acceptable.
+- **FR-015**: The outcome of every guardrail invocation MUST be logged to `guardrail-log.md`, including timestamp, guardrail name, record count, and whether consent was granted or refused.
+- **FR-016**: Guardrail logging MUST occur regardless of the consent outcome — both approvals and refusals are recorded.
 - **FR-011**: System MUST NOT require any user authentication or login.
 - **FR-012**: System MUST assign a unique identifier to each ADR upon creation.
 - **FR-013**: System MUST display ADRs in reverse chronological order (newest first) in the list view.
@@ -104,6 +112,7 @@ A user wants to reset all ADRs back to "Proposed" status in a single operation. 
 
 - **ADR (Architecture Decision Record)**: Represents a single architecture decision. Key attributes: unique identifier, title, status (one of Proposed / Accepted / Deprecated), description (covering decision and rationale), creation timestamp.
 - **ADR Collection**: The complete set of ADRs persisted in `data.json` as a JSON array. Serves as the single source of truth for all ADR data.
+- **Guardrail Log**: An append-only log file (`guardrail-log.md`) recording every guardrail invocation. Key attributes: timestamp, guardrail name, operation description, record count affected, consent outcome (granted/refused).
 
 ## Success Criteria *(mandatory)*
 
