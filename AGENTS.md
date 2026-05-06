@@ -17,6 +17,18 @@ In this order:
    Do not proceed with any implementation. Read the file and report 
    its contents, then stop.
 
+## Iteration boundary rule
+Each iteration ends at the first **STOP HERE** marker you encounter 
+in tasks.md. When you reach a STOP HERE line:
+1. Complete only the tasks above that line in the current iteration block
+2. Commit what you have done
+3. Write a progress.md entry
+4. Stop immediately — do not read ahead or start the next block
+5. The orchestrator will start a new iteration for the next block
+
+Completing multiple iteration blocks in a single run is a violation 
+of this rule regardless of how simple the remaining tasks appear.
+
 ## Behaviour rules
 - Implement exactly ONE work unit per iteration — one user story or task group
 - Write the Jasmine test file for the work unit before marking any task [x]

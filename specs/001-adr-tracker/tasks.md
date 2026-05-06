@@ -26,6 +26,10 @@
 - [ ] T005 [P] Create `guardrail-log.md` as an empty append-only log file in guardrail-log.md [FR-015, FR-016]
 - [ ] T006 [P] Create `tests/SpecRunner.html` with Jasmine 5.x CDN links and script includes for all spec files in tests/SpecRunner.html [Constitution Principle III]
 
+**⛔ ITERATION 1 BOUNDARY — STOP HERE**
+Complete tasks T001–T006 only. Commit, write a progress.md entry, stop.
+Do not proceed to Phase 2 until the next iteration starts.
+
 ---
 
 ## Phase 2: Foundational (Blocking Prerequisites)
@@ -43,6 +47,10 @@
 - [ ] T013 [P] Implement `showNotification(message, type)` in `src/adr-renderer.js` — toast/notification for success, error, info messages [FR-002, FR-005]
 
 **Checkpoint**: Foundation ready — data layer and guardrail infrastructure functional. User story implementation can now begin.
+
+**⛔ ITERATION 2 BOUNDARY — STOP HERE**
+Complete tasks T007–T013 only. Commit, write a progress.md entry, stop.
+Do not proceed to Phase 3 until the next iteration starts.
 
 ---
 
@@ -88,6 +96,10 @@
 
 **Checkpoint**: User Stories 1 & 2 complete — users can create ADRs and see them in the list. This is the MVP.
 
+**⛔ ITERATION 3 BOUNDARY — STOP HERE**
+Complete tasks T014–T021 only. Commit, write a progress.md entry, stop.
+Do not proceed to Phase 5 until the next iteration starts.
+
 ---
 
 ## Phase 5: User Story 3 — View ADR Details and Change Status (Priority: P2)
@@ -111,6 +123,11 @@
 
 **Checkpoint**: User Stories 1, 2 & 3 complete — full ADR lifecycle (create, view, update status) is functional.
 
+**⛔ ITERATION 4 BOUNDARY — STOP HERE**
+Complete tasks T022–T026 only. Commit, write a progress.md entry, stop.
+Do not proceed to Phase 6 until the next iteration starts.
+Phase 6 contains US4 which WILL trigger the G-01 guardrail — do not attempt to pre-implement it.
+
 ---
 
 ## Phase 6: User Story 4 — Bulk Reset All ADRs to Proposed (Priority: P3)
@@ -132,9 +149,17 @@
 - [ ] T030 [US4] Implement `renderGuardrailDialog({ guardrailName, operation, recordCount }, container)` in `src/adr-renderer.js` — modal dialog stating Constitution Principle IV, exact record count, yes/no buttons, return Promise<boolean> [FR-009, FR-010]
 - [ ] T031 [US4] Wire "Reset All to Proposed" button in `src/app.js` — check if ADRs exist, show guardrail dialog via `requestGuardrailConsent()`, on consent call `bulkResetToProposed()`, log outcome via `logGuardrailOutcome()`, refresh list, show notification [FR-008, FR-009, FR-010, FR-015, FR-016]
 
-**⚠️ CONSTITUTION PRINCIPLE IV**: During implementation of T029/T031, the agent MUST halt and request explicit human consent before writing the bulk reset logic that modifies `data.json`/localStorage. This is a hard guardrail stop — proceeding without approval is a constitution violation.
+**⚠️ CONSTITUTION PRINCIPLE IV — HARD GUARDRAIL STOP**
+During implementation of T029/T031, the agent MUST:
+1. Stop immediately before writing any bulk reset logic that modifies data
+2. Create `guardrail-pending.md` stating: guardrail G-01 fired, operation description, exact number of records affected, consent question
+3. Do NOT mark T029, T030, or T031 as [x]
+4. Do NOT commit
+5. Output guardrail-pending.md contents to the terminal and stop the loop
 
-**Checkpoint**: All four user stories complete — full ADR tracker with guardrailed bulk reset.
+**⛔ ITERATION 5 BOUNDARY — HARD STOP FOR GUARDRAIL**
+Do not complete US4 implementation. Do not commit. Do not mark tasks complete.
+Write guardrail-pending.md and stop. Human consent is required before proceeding.
 
 ---
 
@@ -148,6 +173,10 @@
 - [ ] T035 [P] Polish `index.css` — status badges with color coding (Proposed=blue, Accepted=green, Deprecated=red), responsive layout, form styling, modal dialog styling, notification toast styling
 - [ ] T036 Run `tests/SpecRunner.html` — verify all Jasmine specs pass across all spec files [Constitution Principle III]
 - [ ] T037 Validate quickstart.md — open app via `python3 -m http.server 8080`, verify seed data loads, test all key workflows documented in quickstart.md
+
+**⛔ ITERATION 6 BOUNDARY — STOP HERE**
+Complete tasks T032–T037 only. Commit, write a progress.md entry, stop.
+This is the final iteration — all tasks complete.
 
 ---
 
@@ -218,6 +247,19 @@ Task: T031 "Wire Reset All button in src/app.js"
 
 ---
 
+## Iteration Map
+
+| Iteration | Tasks | What the audience sees |
+|-----------|-------|------------------------|
+| 1 | T001–T006 | Project scaffolding, seed data, test runner |
+| 2 | T007–T013 | Data layer and guardrail infrastructure |
+| 3 | T014–T021 | US1 + US2 — create ADR and list view working |
+| 4 | T022–T026 | US3 — detail view and status change |
+| 5 | T027–T031 | US4 starts → G-01 fires → loop stops |
+| 6 | T032–T037 | US4 resumes after consent → polish → COMPLETE |
+
+---
+
 ## Implementation Strategy
 
 ### MVP First (User Stories 1 & 2 Only)
@@ -258,3 +300,4 @@ With multiple developers:
 - Commit after each task or logical group
 - Stop at any checkpoint to validate story independently
 - ⚠️ US4 implementation triggers Constitution Principle IV — agent MUST halt for human consent
+- ⛔ markers are hard iteration boundaries — the agent must never read past them in a single run
